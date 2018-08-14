@@ -1,0 +1,30 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:WpfMqttClient"
+    xmlns:ViewModel="clr-namespace:WpfMqttClient.ViewModel" x:Class="WpfMqttClient.MainWindow"
+    mc:Ignorable="d" Title="{Binding Main.WindowTitle, Mode=OneWay}">
+    <Window.DataContext>
+        <ViewModel:ViewModelLocator/>
+    </Window.DataContext>
+    <Window.IsEnabled>
+        <Binding Path="BindableProperty" Source="{StaticResource MsgLstnr}"/>
+    </Window.IsEnabled>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Grid.Column="1" Command="{Binding Main.ConnectDisconnetCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
+        </Grid>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Main.ApplicationMessages}" />
+            </StatusBarItem>
+        </StatusBar>
+    </DockPanel>
+</Window>
