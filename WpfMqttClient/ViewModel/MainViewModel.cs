@@ -38,6 +38,7 @@ namespace WpfMqttClient.ViewModel
                 WindowTitle = "Generic MQTT Client using WPF and Eclipse paho M2MQTT";
                 ConnectDisconnectButtonText = "Connect";
                 ConnectDisconnetCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
+                EnterKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
@@ -53,15 +54,24 @@ namespace WpfMqttClient.ViewModel
         private MqttClient Client;
 
         public static RelayCommand ConnectDisconnetCommand { get; private set; }
+        public static RelayCommand EnterKeyCommand { get; private set; }
 
         private void OnConnectDisconnectExecuted()
         {
             if (Client == null)
             {
-                Client = new MqttClient(BrokerUri);
-            }
+                try
+                {
+                    Client = new MqttClient(BrokerUri);
+                }
+                catch (Exception e)
+                {
+                    //Client = null;
+                    Console.WriteLine(e.Message);
+                }
+            } 
             
-            if (Client.IsConnected)
+            if (Client != null && Client.IsConnected)
             {
                 Client.Disconnect();
                 ConnectDisconnectButtonText = "Connect";
