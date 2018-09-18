@@ -46,10 +46,78 @@ namespace WpfMqttClient.ViewModel
         }
 
         public string WindowTitle { get; private set; }
-        public string ConnectDisconnectButtonText { get; set; }
-        public string BrokerUri { get; set; }
-        public string ApplicationMessages { get; set; }
-        public string ClientId;
+
+        private string _connectDisconnectButtonText;
+        public string ConnectDisconnectButtonText
+        {
+            get
+            {
+                return _connectDisconnectButtonText;
+            }
+            set
+            {
+                if (value == _connectDisconnectButtonText)
+                {
+                    return;
+                }
+                _connectDisconnectButtonText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _brokerUri;
+        public string BrokerUri
+        {
+            get
+            {
+                return _brokerUri;
+            }
+            set
+            {
+                if (value == _brokerUri)
+                {
+                    return;
+                }
+                _brokerUri = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _applicationMessages;
+        public string ApplicationMessages
+        {
+            get
+            {
+                return _applicationMessages;
+            }
+            set
+            {
+                if (value == _applicationMessages)
+                {
+                    return;
+                }
+                _applicationMessages = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _clientId;
+        public string ClientId
+        {
+            get
+            {
+                return _clientId;
+            }
+            set
+            {
+                if (value == _clientId)
+                {
+                    return;
+                }
+                _clientId = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private MqttClient Client;
 
