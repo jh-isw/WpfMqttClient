@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfMqttClient", "WpfMqttClient\WpfMqttClient.csproj", "{DF5099DB-5B4C-44FE-8C59-F764BBB99664}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M2Mqtt.Net", "..\paho.mqtt.m2mqtt\M2Mqtt\M2Mqtt.Net.csproj", "{A11AEF5A-B246-4FE8-8330-06DB73CC8074}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{DF5099DB-5B4C-44FE-8C59-F764BBB99664}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF5099DB-5B4C-44FE-8C59-F764BBB99664}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF5099DB-5B4C-44FE-8C59-F764BBB99664}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
