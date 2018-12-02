@@ -2,8 +2,9 @@ using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
+using MQTTnet;
+using MQTTnet.Client;
+using MQTTnet.Extensions.ManagedClient;
 
 namespace WpfMqttClient.ViewModel
 {
@@ -28,14 +29,22 @@ namespace WpfMqttClient.ViewModel
         {
             if (IsInDesignMode)
             {
-                WindowTitle = "Generic MQTT Client using WPF and Eclipse paho M2MQTT (Designmode)";
+                WindowTitle = "Generic MQTT Client using WPF and MQTTnet (Designmode)";
                 BrokerUri = "test.mosquitto.org";
                 ConnectDisconnectButtonText = "Connect";
-                ApplicationMessages = "Last Message here...";
+                ApplicationMessages = "The" + Environment.NewLine
+                    + "quick" + Environment.NewLine
+                    + "brown" + Environment.NewLine
+                    + "fox" + Environment.NewLine
+                    + "jumps" + Environment.NewLine
+                    + "over" + Environment.NewLine
+                    + "the"  + Environment.NewLine
+                    + "lazy" + Environment.NewLine
+                    + "dog" + Environment.NewLine;
             }
             else
             {
-                WindowTitle = "Generic MQTT Client using WPF and Eclipse paho M2MQTT";
+                WindowTitle = "Generic MQTT Client using WPF and MQTTnet";
                 ConnectDisconnectButtonText = "Connect";
                 ConnectDisconnetCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
                 EnterKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
@@ -119,47 +128,60 @@ namespace WpfMqttClient.ViewModel
             }
         }
 
-        private MqttClient Client;
+        private IManagedMqttClient Client;
 
         public static RelayCommand ConnectDisconnetCommand { get; private set; }
         public static RelayCommand EnterKeyCommand { get; private set; }
 
-        private void OnConnectDisconnectExecuted()
+        private async void OnConnectDisconnectExecuted()
         {
-            if (Client == null)
+            if (Client == null) // kein Client bisher erzeugt
             {
                 try
                 {
-                    Client = new MqttClient(BrokerUri);
+                    //Client = new MqttClient(BrokerUri);
+                    var options = new ManagedMqttClientOptionsBuilder()
+                        .WithAutoReconnectDelay(TimeSpan.FromSeconds(5))
+                        .WithClientOptions(new MqttClientOptionsBuilder()
+                            .WithClientId(ClientId)
+                            .WithTcpServer(BrokerUri)
+                            /*.WithTls()*/.Build())
+                        .Build();
+                    Client = new MqttFactory().CreateManagedMqttClient();
+                    Client.ApplicationMessageReceived += OnMessageReceived;
+                    Client.Connected += OnConnected;
+                    Client.ConnectingFailed += OnConnectingFailed;
+                    await Client.SubscribeAsync(new TopicFilterBuilder().WithTopic("$SYS/broker/uptime").Build());
+                    await Client.StartAsync(options);
+                    ConnectDisconnectButtonText = "Disconnect";
                 }
                 catch (Exception e)
                 {
-                    //Client = null;
                     Console.WriteLine(e.Message);
                 }
             } 
-            
-            if (Client != null && Client.IsConnected)
+            else // Client ist erzeugt
             {
-                Client.Disconnect();
+                await Client.StopAsync();
                 ConnectDisconnectButtonText = "Connect";
             }
-            else
-            {
-                try
-                {
-                    Client.Connect(ClientId);
-                    Client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
-                    Client.Subscribe(new string[] { "$SYS/broker/uptime" },
-                        new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                
-                ConnectDisconnectButtonText = "Disconnect";
-            }
+        }
+
+        private void OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
+        {
+            Console.WriteLine("OnConnectingFailed called with e: " + e.ToString());
+        }
+
+        private void OnConnected(object sender, MqttClientConnectedEventArgs e)
+        {
+            Console.WriteLine("OnConnected called with e: " + e.ToString());
+        }
+
+        private void OnMessageReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
+        {
+            var message = System.Text.Encoding.Default.GetString(e.ApplicationMessage.Payload);
+            Console.WriteLine(message);
+            ApplicationMessages += message + "\n";
         }
 
         private bool OnConnectDisconnectCanExecute()
@@ -167,16 +189,13 @@ namespace WpfMqttClient.ViewModel
             return true;
         }
 
-        void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        {
-            ApplicationMessages += System.Text.Encoding.Default.GetString(e.Message) + "\n";
-        }
-
         private void DoCleanup(DoCleanupMessage obj)
         {
+            //Console.WriteLine("DoCleanup called");
             if (Client != null && Client.IsConnected)
             {
-                Client.Disconnect();
+                Client.StopAsync();
+                Client.Dispose();
             }
         }
 
