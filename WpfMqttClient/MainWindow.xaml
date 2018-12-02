@@ -25,10 +25,17 @@
             </TextBox>
             <Button Grid.Column="1" Command="{Binding Main.ConnectDisconnetCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
         </Grid>
-        <StatusBar DockPanel.Dock="Bottom">
+        <StatusBar DockPanel.Dock="Bottom" MaxHeight="25">
             <StatusBarItem>
                 <TextBlock Text="{Binding Main.ApplicationMessages}" />
             </StatusBarItem>
         </StatusBar>
+        <TextBox Name="OutputBox" DockPanel.Dock="Bottom" Text="{Binding Main.ApplicationMessages}"
+                 Height="90" VerticalScrollBarVisibility="Visible" TextWrapping="Wrap" />
+        <TabControl>
+            <TabItem Header="General">
+                <Label Content="Content goes here..." />
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>
