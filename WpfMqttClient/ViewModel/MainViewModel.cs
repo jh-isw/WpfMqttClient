@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
+using WpfMqttClient.Model;
 
 namespace WpfMqttClient.ViewModel
 {
@@ -41,6 +44,7 @@ namespace WpfMqttClient.ViewModel
                     + "the"  + Environment.NewLine
                     + "lazy" + Environment.NewLine
                     + "dog" + Environment.NewLine;
+                Datapoints.Add(new DatapointModel { Identifier = "foo", Value = "bar" });
             }
             else
             {
@@ -51,6 +55,7 @@ namespace WpfMqttClient.ViewModel
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
+                Datapoints = new ObservableCollection<DatapointModel>();
             }
         }
 
@@ -130,6 +135,8 @@ namespace WpfMqttClient.ViewModel
 
         private IManagedMqttClient Client;
 
+        public ObservableCollection<DatapointModel> Datapoints { get; }
+
         public static RelayCommand ConnectDisconnetCommand { get; private set; }
         public static RelayCommand EnterKeyCommand { get; private set; }
 
@@ -139,7 +146,6 @@ namespace WpfMqttClient.ViewModel
             {
                 try
                 {
-                    //Client = new MqttClient(BrokerUri);
                     var options = new ManagedMqttClientOptionsBuilder()
                         .WithAutoReconnectDelay(TimeSpan.FromSeconds(5))
                         .WithClientOptions(new MqttClientOptionsBuilder()
@@ -191,7 +197,6 @@ namespace WpfMqttClient.ViewModel
 
         private void DoCleanup(DoCleanupMessage obj)
         {
-            //Console.WriteLine("DoCleanup called");
             if (Client != null && Client.IsConnected)
             {
                 Client.StopAsync();
