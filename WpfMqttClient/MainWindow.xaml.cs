@@ -24,6 +24,12 @@ namespace WpfMqttClient
         public MainWindow()
         {
             InitializeComponent();
+            OutputBox.TextChanged += OnOutputBoxTextChanged;
+        }
+
+        private void OnOutputBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            OutputBox.ScrollToEnd();
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
