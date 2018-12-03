@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:WpfMqttClient"
     xmlns:ViewModel="clr-namespace:WpfMqttClient.ViewModel" x:Class="WpfMqttClient.MainWindow"
-    mc:Ignorable="d" Title="{Binding Main.WindowTitle, Mode=OneWay}">
+    mc:Ignorable="d" Title="{Binding Main.WindowTitle, Mode=OneWay}" Width="500">
     <Window.DataContext>
         <ViewModel:ViewModelLocator/>
     </Window.DataContext>
@@ -28,11 +28,10 @@
         <TextBox Name="OutputBox" DockPanel.Dock="Bottom" Text="{Binding Main.ApplicationMessages}"
                  Height="90" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
         <GroupBox Header="Datenpunkte">
-            <DataGrid ItemsSource="{Binding Main.Datapoints}" VerticalScrollBarVisibility="Auto"
-                      AutoGenerateColumns="False">
+            <DataGrid ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
+                      AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Path=Identifier}" >
-                        
+                    <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" >
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
                 </DataGrid.Columns>

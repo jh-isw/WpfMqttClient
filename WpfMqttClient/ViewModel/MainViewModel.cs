@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Windows.Data;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -56,8 +59,22 @@ namespace WpfMqttClient.ViewModel
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
                 Datapoints = new ObservableCollection<DatapointModel>();
+                //Datapoints.CollectionChanged += UpdateDatapointList;
+                DatapointsView = CollectionViewSource.GetDefaultView(Datapoints) as ListCollectionView;
+                DatapointsView.CurrentChanged += (s, e) =>
+                {
+                    RaisePropertyChanged(() => SelectedDatapointModel);
+                };
             }
         }
+
+        //private void UpdateDatapointList(object sender, NotifyCollectionChangedEventArgs e)
+        //{
+        //    foreach (DatapointModel var in e.NewItems)
+        //    {
+        //        Console.WriteLine(var.ToString());
+        //    }
+        //}
 
         public string WindowTitle { get; private set; }
 
@@ -135,7 +152,19 @@ namespace WpfMqttClient.ViewModel
 
         private IManagedMqttClient Client;
 
-        public ObservableCollection<DatapointModel> Datapoints { get; }
+        private ObservableCollection<DatapointModel> Datapoints { get; }
+
+        public DatapointModel SelectedDatapointModel
+        {
+            get => DatapointsView.CurrentItem as DatapointModel;
+            set
+            {
+                DatapointsView.MoveCurrentTo(value);
+                RaisePropertyChanged();
+            }
+        }
+
+        public ICollectionView DatapointsView { get; }
 
         public static RelayCommand ConnectDisconnetCommand { get; private set; }
         public static RelayCommand EnterKeyCommand { get; private set; }

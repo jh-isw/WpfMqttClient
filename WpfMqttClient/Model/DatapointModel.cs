@@ -26,6 +26,9 @@ namespace WpfMqttClient.Model
                     return;
                 }
                 _identifier = value;
+#if DEBUG
+                Console.WriteLine("identifier :" + value);
+#endif
                 OnPropertyChanged();
             }
         }
@@ -44,6 +47,9 @@ namespace WpfMqttClient.Model
                     return;
                 }
                 _value = value;
+#if DEBUG
+                Console.WriteLine("value :" + value);
+#endif
                 OnPropertyChanged();
             }
         }
@@ -51,6 +57,11 @@ namespace WpfMqttClient.Model
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public override string ToString()
+        {
+            return Identifier + ", " + Value;
         }
     }
 }
