@@ -52,9 +52,14 @@ namespace WpfMqttClient.ViewModel
             else
             {
                 WindowTitle = "Generic MQTT Client using WPF and MQTTnet";
+
                 ConnectDisconnectButtonText = "Connect";
                 ConnectDisconnetCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
-                EnterKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
+                ConnectDisconnectReturnKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
+
+                NewDatapointCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapintCanExecute);
+                NewDatapointReturnKeyCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapintCanExecute);
+
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
@@ -67,6 +72,8 @@ namespace WpfMqttClient.ViewModel
                 };
             }
         }
+
+        
 
         //private void UpdateDatapointList(object sender, NotifyCollectionChangedEventArgs e)
         //{
@@ -150,6 +157,24 @@ namespace WpfMqttClient.ViewModel
             }
         }
 
+        private string _newDatapointName;
+        public string NewDatapointName
+        {
+            get
+            {
+                return _newDatapointName;
+            }
+            set
+            {
+                if (value == _newDatapointName)
+                {
+                    return;
+                }
+                _newDatapointName = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private IManagedMqttClient Client;
 
         private ObservableCollection<DatapointModel> Datapoints { get; }
@@ -166,12 +191,16 @@ namespace WpfMqttClient.ViewModel
 
         public ICollectionView DatapointsView { get; }
 
+        #region Commands
         public static RelayCommand ConnectDisconnetCommand { get; private set; }
-        public static RelayCommand EnterKeyCommand { get; private set; }
+        public static RelayCommand ConnectDisconnectReturnKeyCommand { get; private set; }
 
+        public static RelayCommand NewDatapointCommand { get; private set; }
+        public static RelayCommand NewDatapointReturnKeyCommand { get; private set; }
+        #endregion
         private async void OnConnectDisconnectExecuted()
         {
-            if (Client == null) // kein Client bisher erzeugt
+            if ((Client == null) || (Client != null && !Client.IsStarted)) // kein Client bisher erzeugt oder angehalten
             {
                 try
                 {
@@ -186,7 +215,6 @@ namespace WpfMqttClient.ViewModel
                     Client.ApplicationMessageReceived += OnMessageReceived;
                     Client.Connected += OnConnected;
                     Client.ConnectingFailed += OnConnectingFailed;
-                    await Client.SubscribeAsync(new TopicFilterBuilder().WithTopic("$SYS/broker/uptime").Build());
                     await Client.StartAsync(options);
                     ConnectDisconnectButtonText = "Disconnect";
                 }
@@ -194,12 +222,27 @@ namespace WpfMqttClient.ViewModel
                 {
                     Console.WriteLine(e.Message);
                 }
-            } 
+            }
             else // Client ist erzeugt
             {
                 await Client.StopAsync();
                 ConnectDisconnectButtonText = "Connect";
             }
+        }
+
+        private bool OnConnectDisconnectCanExecute()
+        {
+            return true;
+        }
+
+        private async void OnNewDatapointExecuted()
+        {
+            await Client.SubscribeAsync(new TopicFilterBuilder().WithTopic(/*"$SYS/broker/uptime"*/NewDatapointName).Build());
+        }
+
+        private bool OnNewDatapintCanExecute()
+        {
+            return true;
         }
 
         private void OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
@@ -217,11 +260,6 @@ namespace WpfMqttClient.ViewModel
             var message = System.Text.Encoding.Default.GetString(e.ApplicationMessage.Payload);
             Console.WriteLine(message);
             ApplicationMessages += message + "\n";
-        }
-
-        private bool OnConnectDisconnectCanExecute()
-        {
-            return true;
         }
 
         private void DoCleanup(DoCleanupMessage obj)
