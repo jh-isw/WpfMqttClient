@@ -57,8 +57,8 @@ namespace WpfMqttClient.ViewModel
                 ConnectDisconnetCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
                 ConnectDisconnectReturnKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
 
-                NewDatapointCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapintCanExecute);
-                NewDatapointReturnKeyCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapintCanExecute);
+                NewDatapointCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapointCanExecute);
+                NewDatapointReturnKeyCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapointCanExecute);
 
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
@@ -72,9 +72,7 @@ namespace WpfMqttClient.ViewModel
                 };
             }
         }
-
         
-
         //private void UpdateDatapointList(object sender, NotifyCollectionChangedEventArgs e)
         //{
         //    foreach (DatapointModel var in e.NewItems)
@@ -240,7 +238,7 @@ namespace WpfMqttClient.ViewModel
             await Client.SubscribeAsync(new TopicFilterBuilder().WithTopic(/*"$SYS/broker/uptime"*/NewDatapointName).Build());
         }
 
-        private bool OnNewDatapintCanExecute()
+        private bool OnNewDatapointCanExecute()
         {
             return true;
         }
@@ -260,6 +258,7 @@ namespace WpfMqttClient.ViewModel
             var message = System.Text.Encoding.Default.GetString(e.ApplicationMessage.Payload);
             Console.WriteLine(message);
             ApplicationMessages += message + "\n";
+            // Liste nach Topic durchlaufen und Wert updaten
         }
 
         private void DoCleanup(DoCleanupMessage obj)
