@@ -209,7 +209,7 @@ namespace WpfMqttClient.ViewModel
                         .WithClientOptions(new MqttClientOptionsBuilder()
                             .WithClientId(ClientId)
                             .WithTcpServer(BrokerUri)
-                            /*.WithTls()*/.Build())
+                            .WithTls().Build())
                         .Build();
                     Client = new MqttFactory().CreateManagedMqttClient();
                     Client.ApplicationMessageReceived += OnMessageReceived;
