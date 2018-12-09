@@ -22,7 +22,7 @@
             <Label Content="Broker URI:" />
             <TextBox Grid.Column="1" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InputBindings>
-                    <KeyBinding Key="Return" Command="{Binding Main.EnterKeyCommand}" />
+                    <KeyBinding Key="Return" Command="{Binding Main.ConnectDisconnectReturnKeyCommand}" />
                 </TextBox.InputBindings>
             </TextBox>
             <Button Grid.Column="2" Command="{Binding Main.ConnectDisconnetCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
