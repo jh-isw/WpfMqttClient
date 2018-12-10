@@ -25,7 +25,7 @@
                     <KeyBinding Key="Return" Command="{Binding Main.ConnectDisconnectReturnKeyCommand}" />
                 </TextBox.InputBindings>
             </TextBox>
-            <Button Grid.Column="2" Command="{Binding Main.ConnectDisconnetCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
+            <Button Grid.Column="2" Command="{Binding Main.ConnectDisconnectCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
         </Grid>
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>

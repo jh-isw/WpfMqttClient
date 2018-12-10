@@ -54,7 +54,7 @@ namespace WpfMqttClient.ViewModel
                 WindowTitle = "Generic MQTT Client using WPF and MQTTnet";
 
                 ConnectDisconnectButtonText = "Connect";
-                ConnectDisconnetCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
+                ConnectDisconnectCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
                 ConnectDisconnectReturnKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
 
                 NewDatapointCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapintCanExecute);
@@ -192,10 +192,10 @@ namespace WpfMqttClient.ViewModel
         public ICollectionView DatapointsView { get; }
 
         #region Commands
-        public static RelayCommand ConnectDisconnetCommand { get; private set; }
+        public RelayCommand ConnectDisconnectCommand { get; private set; }
         public static RelayCommand ConnectDisconnectReturnKeyCommand { get; private set; }
 
-        public static RelayCommand NewDatapointCommand { get; private set; }
+        public RelayCommand NewDatapointCommand { get; private set; }
         public static RelayCommand NewDatapointReturnKeyCommand { get; private set; }
         #endregion
         private async void OnConnectDisconnectExecuted()
@@ -262,7 +262,7 @@ namespace WpfMqttClient.ViewModel
             ApplicationMessages += message + "\n";
         }
 
-        private void DoCleanup(DoCleanupMessage obj)
+        public void DoCleanup(DoCleanupMessage obj)
         {
             if (Client != null && Client.IsConnected)
             {
