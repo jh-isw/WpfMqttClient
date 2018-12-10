@@ -13,6 +13,11 @@
         <Binding Path="BindableProperty" Source="{StaticResource MsgLstnr}"/>
     </Window.IsEnabled>
     <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Extras">
+                <MenuItem Header="_Restore Defaults" Command="{Binding Main.RestoreDefaultsCommand}" />
+            </MenuItem>
+        </Menu>
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />

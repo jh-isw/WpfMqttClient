@@ -60,6 +60,8 @@ namespace WpfMqttClient.ViewModel
                 NewDatapointCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapintCanExecute);
                 NewDatapointReturnKeyCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapintCanExecute);
 
+                RestoreDefaultsCommand = new RelayCommand(OnRestoreDefaultsExecuted, null);
+
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
@@ -72,7 +74,7 @@ namespace WpfMqttClient.ViewModel
                 };
             }
         }
-        
+
         //private void UpdateDatapointList(object sender, NotifyCollectionChangedEventArgs e)
         //{
         //    foreach (DatapointModel var in e.NewItems)
@@ -213,7 +215,9 @@ namespace WpfMqttClient.ViewModel
 
         public RelayCommand NewDatapointCommand { get; private set; }
         public static RelayCommand NewDatapointReturnKeyCommand { get; private set; }
-        
+
+        public RelayCommand RestoreDefaultsCommand { get; private set; }
+
         private async void OnConnectDisconnectExecuted()
         {
             if ((Client == null) || (Client != null && !Client.IsStarted)) // kein Client bisher erzeugt oder angehalten
@@ -260,6 +264,12 @@ namespace WpfMqttClient.ViewModel
         private bool OnNewDatapintCanExecute()
         {
             return true;
+        }
+
+        private void OnRestoreDefaultsExecuted()
+        {
+            BrokerUri = "iot.eclipse.org";
+            NewDatapointName = "$SYS/broker/uptime";
         }
         #endregion
 
