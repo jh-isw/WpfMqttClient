@@ -1,4 +1,4 @@
 .vs/
 packages/
-WpfMqttClient/bin/
-WpfMqttClient/obj/
+*/bin/
+*/obj/

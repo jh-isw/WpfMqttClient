@@ -13,6 +13,11 @@
         <Binding Path="BindableProperty" Source="{StaticResource MsgLstnr}"/>
     </Window.IsEnabled>
     <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Extras">
+                <MenuItem Header="_Restore Defaults" Command="{Binding Main.RestoreDefaultsCommand}" />
+            </MenuItem>
+        </Menu>
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />
@@ -22,10 +27,10 @@
             <Label Content="Broker URI:" />
             <TextBox Grid.Column="1" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InputBindings>
-                    <KeyBinding Key="Return" Command="{Binding Main.EnterKeyCommand}" />
+                    <KeyBinding Key="Return" Command="{Binding Main.ConnectDisconnectReturnKeyCommand}" />
                 </TextBox.InputBindings>
             </TextBox>
-            <Button Grid.Column="2" Command="{Binding Main.ConnectDisconnetCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
+            <Button Grid.Column="2" Command="{Binding Main.ConnectDisconnectCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
         </Grid>
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
