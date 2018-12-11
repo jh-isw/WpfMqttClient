@@ -47,7 +47,13 @@
             <Button Grid.Column="2" Command="{Binding Main.NewDatapointCommand}" Content="Subscribe" MinWidth="100" />
         </Grid>
         <TextBox Name="OutputBox" DockPanel.Dock="Bottom" Text="{Binding Main.ApplicationMessages}"
-                 Height="90" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+                 Height="90" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" >
+            <TextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Clear Content" Command="{Binding Main.ClearOutputBoxContent}" />
+                </ContextMenu>
+            </TextBox.ContextMenu>
+        </TextBox>
         <GroupBox Header="Datenpunkte">
             <DataGrid ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
                       AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">

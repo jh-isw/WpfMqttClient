@@ -62,6 +62,8 @@ namespace WpfMqttClient.ViewModel
 
                 RestoreDefaultsCommand = new RelayCommand(OnRestoreDefaultsExecuted, null);
 
+                ClearOutputBoxContent = new RelayCommand(OnClearOutputBoxContent, null);
+
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
@@ -218,6 +220,8 @@ namespace WpfMqttClient.ViewModel
 
         public RelayCommand RestoreDefaultsCommand { get; private set; }
 
+        public RelayCommand ClearOutputBoxContent { get; private set; }
+
         private async void OnConnectDisconnectExecuted()
         {
             if ((Client == null) || (Client != null && !Client.IsStarted)) // kein Client bisher erzeugt oder angehalten
@@ -270,6 +274,11 @@ namespace WpfMqttClient.ViewModel
         {
             BrokerUri = "iot.eclipse.org";
             NewDatapointName = "$SYS/broker/uptime";
+        }
+        
+        private void OnClearOutputBoxContent()
+        {
+            ApplicationMessages = string.Empty;
         }
         #endregion
 
