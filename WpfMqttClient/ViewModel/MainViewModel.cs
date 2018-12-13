@@ -320,6 +320,7 @@ namespace WpfMqttClient.ViewModel
         private async void OnNewDatapointExecuted()
         {
             await Client.SubscribeAsync(new TopicFilterBuilder().WithTopic(/*"$SYS/broker/uptime"*/NewDatapointName).Build());
+            NewDatapointName = "";
         }
 
         private bool OnNewDatapointCanExecute()
@@ -347,7 +348,10 @@ namespace WpfMqttClient.ViewModel
 
         private void OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
         {
+            ConnectedToBroker = false;
+#if DEBUG
             Console.WriteLine("OnConnectingFailed called with e: " + e.ToString());
+#endif
             ApplicationMessages += "Connection failed\n";
             ConnectDisconnectButtonText = "Connect";
         }
