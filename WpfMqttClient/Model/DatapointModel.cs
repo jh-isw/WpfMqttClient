@@ -48,7 +48,7 @@ namespace WpfMqttClient.Model
                 }
                 _value = value;
 #if DEBUG
-                Console.WriteLine("value :" + value);
+                Console.WriteLine("value: " + value);
 #endif
                 OnPropertyChanged();
             }
