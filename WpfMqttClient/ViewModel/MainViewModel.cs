@@ -69,6 +69,8 @@ namespace WpfMqttClient.ViewModel
 
                 ClearOutputBoxContent = new RelayCommand(OnClearOutputBoxContent, null);
 
+                WithTlsCommand = new RelayCommand(OnWithTlsExecuted, null);
+
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
@@ -216,6 +218,24 @@ namespace WpfMqttClient.ViewModel
             }
         }
 
+        private bool _withTls = true;
+        public bool WithTls
+        {
+            get
+            {
+                return _withTls;
+            }
+            set
+            {
+                if (value == _withTls)
+                {
+                    return;
+                }
+                _withTls = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private IManagedMqttClient Client;
 
         private ObservableCollection<DatapointModel> Datapoints { get; }
@@ -243,25 +263,41 @@ namespace WpfMqttClient.ViewModel
 
         public RelayCommand ClearOutputBoxContent { get; private set; }
 
+        public RelayCommand WithTlsCommand { get; private set; }
+
         private async void OnConnectDisconnectExecuted()
         {
             if ((Client == null) || (Client != null && !Client.IsStarted)) // kein Client bisher erzeugt oder angehalten
             {
                 try
                 {
-                    var options = new ManagedMqttClientOptionsBuilder()
-                        .WithAutoReconnectDelay(TimeSpan.FromSeconds(5))
-                        .WithClientOptions(new MqttClientOptionsBuilder()
+                    IMqttClientOptions options;
+                    if (WithTls)
+                    {
+                        options = new MqttClientOptionsBuilder()
                             .WithClientId(ClientId)
                             .WithTcpServer(BrokerUri)
-                            .WithTls().Build())
+                            .WithTls()
+                            .Build();
+                    }
+                    else
+                    {
+                        options = new MqttClientOptionsBuilder()
+                            .WithClientId(ClientId)
+                            .WithTcpServer(BrokerUri)
+                            .Build();
+                    }
+
+                    var managedOptions = new ManagedMqttClientOptionsBuilder()
+                        .WithAutoReconnectDelay(TimeSpan.FromSeconds(5))
+                        .WithClientOptions(options)
                         .Build();
                     Client = new MqttFactory().CreateManagedMqttClient();
                     Client.ApplicationMessageReceived += OnMessageReceived;
                     Client.Connected += OnConnected;
                     Client.Disconnected += OnDisconnected;
                     Client.ConnectingFailed += OnConnectingFailed;
-                    await Client.StartAsync(options);
+                    await Client.StartAsync(managedOptions);
                     ConnectDisconnectButtonText = "Disconnect";
                 }
                 catch (Exception e)
@@ -301,15 +337,24 @@ namespace WpfMqttClient.ViewModel
         {
             ApplicationMessages = string.Empty;
         }
+        
+        private void OnWithTlsExecuted()
+        {
+            WithTls = !WithTls;
+            Console.WriteLine(WithTls? "TLS enabled" : "TLS disabled");
+        }
         #endregion
 
         private void OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
         {
             Console.WriteLine("OnConnectingFailed called with e: " + e.ToString());
+            ApplicationMessages += "Connection failed\n";
+            ConnectDisconnectButtonText = "Connect";
         }
 
         private void OnConnected(object sender, MqttClientConnectedEventArgs e)
         {
+            ApplicationMessages += "Connection success\n";
             ConnectedToBroker = true;
         }
 

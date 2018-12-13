@@ -16,6 +16,8 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Extras">
                 <MenuItem Header="_Restore Defaults" Command="{Binding Main.RestoreDefaultsCommand}" />
+                <MenuItem Header="_With TLS" Command="{Binding Main.WithTlsCommand}"
+                          IsChecked="{Binding Main.WithTls}" />
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
