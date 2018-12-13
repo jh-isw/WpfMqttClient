@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
@@ -55,6 +56,8 @@ namespace WpfMqttClient.ViewModel
             {
                 WindowTitle = "Generic MQTT Client using WPF and MQTTnet";
 
+                DispatcherHelper.Initialize();
+
                 ConnectDisconnectButtonText = "Connect";
                 ConnectDisconnectCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
                 ConnectDisconnectReturnKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
@@ -91,7 +94,8 @@ namespace WpfMqttClient.ViewModel
 
         private void DatapointsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            DatapointsView.Refresh();
+            //DatapointsView.Refresh();
+            DispatcherHelper.RunAsync(() => DatapointsView.Refresh());
         }
 
         //private void UpdateDatapointList(object sender, NotifyCollectionChangedEventArgs e)
