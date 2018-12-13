@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows.Documents;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -67,7 +69,17 @@ namespace WpfMqttClient.ViewModel
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
-                Datapoints = new ObservableCollection<DatapointModel>();
+                var dpList = new List<DatapointModel>();
+                dpList.Add(new DatapointModel
+                {
+                    Identifier = "$SYS/broker/uptime",
+                    Value = ""
+                });
+                Datapoints = new ObservableCollection<DatapointModel>(dpList);
+                foreach(var item in Datapoints)
+                {
+                    item.PropertyChanged += DatapointsPropertyChanged;
+                }
                 //Datapoints.CollectionChanged += UpdateDatapointList;
                 DatapointsView = CollectionViewSource.GetDefaultView(Datapoints) as ListCollectionView;
                 DatapointsView.CurrentChanged += (s, e) =>
@@ -75,6 +87,11 @@ namespace WpfMqttClient.ViewModel
                     RaisePropertyChanged(() => SelectedDatapointModel);
                 };
             }
+        }
+
+        private void DatapointsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            DatapointsView.Refresh();
         }
 
         //private void UpdateDatapointList(object sender, NotifyCollectionChangedEventArgs e)
@@ -303,6 +320,7 @@ namespace WpfMqttClient.ViewModel
             Console.WriteLine(message);
             ApplicationMessages += message + "\n";
             // Liste nach Topic durchlaufen und Wert updaten
+            Datapoints[0].Value = message;
         }
 
         public void DoCleanup(DoCleanupMessage obj)
