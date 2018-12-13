@@ -67,7 +67,7 @@ namespace WpfMqttClient.ViewModel
 
                 RestoreDefaultsCommand = new RelayCommand(OnRestoreDefaultsExecuted, null);
 
-                ClearOutputBoxContent = new RelayCommand(OnClearOutputBoxContent, null);
+                ClearOutputBoxContent = new RelayCommand(OnClearOutputBoxContentExecuted, null);
 
                 WithTlsCommand = new RelayCommand(OnWithTlsExecuted, null);
 
@@ -333,7 +333,7 @@ namespace WpfMqttClient.ViewModel
             NewDatapointName = "$SYS/broker/uptime";
         }
         
-        private void OnClearOutputBoxContent()
+        private void OnClearOutputBoxContentExecuted()
         {
             ApplicationMessages = string.Empty;
         }
