@@ -353,7 +353,7 @@ namespace WpfMqttClient.ViewModel
             Console.WriteLine("OnConnectingFailed called with e: " + e.ToString());
 #endif
             ApplicationMessages += "Connection failed\n";
-            ConnectDisconnectButtonText = "Connect";
+            ConnectDisconnectButtonText = "Stop trying";
         }
 
         private void OnConnected(object sender, MqttClientConnectedEventArgs e)
