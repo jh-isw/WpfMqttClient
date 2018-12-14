@@ -60,7 +60,27 @@
         </GroupBox>
         <TabControl TabStripPlacement="Bottom" Margin="0,0,0,5">
             <TabItem Header="Datenquellen">
-                <GroupBox Header="Datenquellen"></GroupBox>
+                <GroupBox Header="Datenquellen">
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Broker URI:" />
+                        <TextBox Grid.Column="1" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Return" Command="{Binding Main.ConnectReturnKeyCommand}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <Button Grid.Column="2" Command="{Binding Main.ConnectCommand}" Content="Connect" MinWidth="100"/>
+                        <TextBox Grid.Row="2" Grid.ColumnSpan="3" MinHeight="50"></TextBox>
+                    </Grid>
+                </GroupBox>
             </TabItem>
             <TabItem Header="Datenpunkte">
                 <GroupBox Header="Datenpunkte">

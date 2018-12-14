@@ -62,6 +62,9 @@ namespace WpfMqttClient.ViewModel
                 ConnectDisconnectCommand = new RelayCommand(OnConnectDisconnectExecuted, OnConnectDisconnectCanExecute);
                 ConnectDisconnectReturnKeyCommand = new RelayCommand(OnConnectDisconnectExecuted, null);
 
+                ConnectCommand = new RelayCommand(OnConnectExecuted, OnConnectCanExecute);
+                ConnectReturnKeyCommand = new RelayCommand(OnConnectExecuted, null);
+
                 NewDatapointCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapointCanExecute);
                 NewDatapointReturnKeyCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapointCanExecute);
 
@@ -74,6 +77,9 @@ namespace WpfMqttClient.ViewModel
                 ClientId = Guid.NewGuid().ToString();
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
+
+                Datasources = new Dictionary<string, IManagedMqttClient>();
+
                 var dpList = new List<DatapointModel>();
                 dpList.Add(new DatapointModel
                 {
@@ -236,6 +242,8 @@ namespace WpfMqttClient.ViewModel
             }
         }
 
+        public Dictionary<string, IManagedMqttClient> Datasources;
+
         private IManagedMqttClient Client;
 
         private ObservableCollection<DatapointModel> Datapoints { get; }
@@ -255,6 +263,9 @@ namespace WpfMqttClient.ViewModel
         #region Commands
         public RelayCommand ConnectDisconnectCommand { get; private set; }
         public static RelayCommand ConnectDisconnectReturnKeyCommand { get; private set; }
+
+        public RelayCommand ConnectCommand { get; private set; }
+        public static RelayCommand ConnectReturnKeyCommand { get; private set; }
 
         public RelayCommand NewDatapointCommand { get; private set; }
         public static RelayCommand NewDatapointReturnKeyCommand { get; private set; }
@@ -313,6 +324,16 @@ namespace WpfMqttClient.ViewModel
         }
 
         private bool OnConnectDisconnectCanExecute()
+        {
+            return true;
+        }
+        
+        private void OnConnectExecuted()
+        {
+            BrokerUri = "";
+        }
+
+        private bool OnConnectCanExecute()
         {
             return true;
         }
