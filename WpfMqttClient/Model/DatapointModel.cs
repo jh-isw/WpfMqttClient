@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace WpfMqttClient.Model
 {
-    public class DatapointModel : INotifyPropertyChanged
+    public class DatapointModel : ModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _identifier;
         public string Identifier
         {
@@ -52,11 +50,6 @@ namespace WpfMqttClient.Model
 #endif
                 OnPropertyChanged();
             }
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public override string ToString()
