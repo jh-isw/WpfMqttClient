@@ -110,6 +110,11 @@ namespace WpfMqttClient.Model
             await _client.StartAsync(_managedOptions);
         }
 
+        public async void StopClientAsync()
+        {
+            await _client.StopAsync();
+        }
+
         private void OnConnected(object sender, MqttClientConnectedEventArgs e)
         {
             throw new NotImplementedException();

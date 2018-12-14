@@ -79,6 +79,8 @@
     </ApplicationDefinition>
     <Compile Include="MessageListener.cs" />
     <Compile Include="Model\DatapointModel.cs" />
+    <Compile Include="Model\DatasourceModel.cs" />
+    <Compile Include="Model\ModelBase.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
