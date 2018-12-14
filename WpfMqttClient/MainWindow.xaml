@@ -48,23 +48,32 @@
             </TextBox>
             <Button Grid.Column="2" Command="{Binding Main.NewDatapointCommand}" Content="Subscribe" MinWidth="100" />
         </Grid>
-        <TextBox Name="OutputBox" DockPanel.Dock="Bottom" Text="{Binding Main.ApplicationMessages}"
+        <GroupBox DockPanel.Dock="Bottom" Header="Application Output">
+            <TextBox Name="OutputBox" DockPanel.Dock="Bottom" Text="{Binding Main.ApplicationMessages}"
                  Height="90" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" >
-            <TextBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Clear Content" Command="{Binding Main.ClearOutputBoxContent}" />
-                </ContextMenu>
-            </TextBox.ContextMenu>
-        </TextBox>
-        <GroupBox Header="Datenpunkte">
-            <DataGrid ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
-                      AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" >
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
-                </DataGrid.Columns>
-            </DataGrid>
+                <TextBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Clear Content" Command="{Binding Main.ClearOutputBoxContent}" />
+                    </ContextMenu>
+                </TextBox.ContextMenu>
+            </TextBox>
         </GroupBox>
+        <TabControl TabStripPlacement="Bottom" Margin="0,0,0,5">
+            <TabItem Header="Datenquellen">
+                <GroupBox Header="Datenquellen"></GroupBox>
+            </TabItem>
+            <TabItem Header="Datenpunkte">
+                <GroupBox Header="Datenpunkte">
+                    <DataGrid ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
+                      AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" >
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>
