@@ -75,11 +75,14 @@ namespace WpfMqttClient.ViewModel
                 WithTlsCommand = new RelayCommand(OnWithTlsExecuted, null);
 
                 ClientId = Guid.NewGuid().ToString();
+
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
+
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
 
-                Datasources = new Dictionary<string, IManagedMqttClient>();
-
+                Datasources = new ObservableCollection<DatasourceModel>();
+                DatasourcesView = CollectionViewSource.GetDefaultView(Datasources) as ListCollectionView;
+                
                 var dpList = new List<DatapointModel>();
                 dpList.Add(new DatapointModel
                 {
@@ -242,12 +245,9 @@ namespace WpfMqttClient.ViewModel
             }
         }
 
-        public Dictionary<string, IManagedMqttClient> Datasources;
-
         private IManagedMqttClient Client;
 
         private ObservableCollection<DatapointModel> Datapoints { get; }
-
         public DatapointModel SelectedDatapointModel
         {
             get => DatapointsView.CurrentItem as DatapointModel;
@@ -257,8 +257,10 @@ namespace WpfMqttClient.ViewModel
                 RaisePropertyChanged();
             }
         }
-
         public ICollectionView DatapointsView { get; }
+
+        private ObservableCollection<DatasourceModel> Datasources;
+        public ICollectionView DatasourcesView { get; }
 
         #region Commands
         public RelayCommand ConnectDisconnectCommand { get; private set; }

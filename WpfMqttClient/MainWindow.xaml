@@ -78,7 +78,7 @@
                             </TextBox.InputBindings>
                         </TextBox>
                         <Button Grid.Column="2" Command="{Binding Main.ConnectCommand}" Content="Connect" MinWidth="100"/>
-                        <TextBox Grid.Row="2" Grid.ColumnSpan="3" MinHeight="50"></TextBox>
+                        <DataGrid Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding Main.DatasourcesView}"></DataGrid>
                     </Grid>
                 </GroupBox>
             </TabItem>
