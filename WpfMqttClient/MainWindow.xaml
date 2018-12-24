@@ -23,20 +23,6 @@
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Broker URI:" />
-            <TextBox Grid.Column="1" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <TextBox.InputBindings>
-                    <KeyBinding Key="Return" Command="{Binding Main.ConnectDisconnectReturnKeyCommand}" />
-                </TextBox.InputBindings>
-            </TextBox>
-            <Button Grid.Column="2" Command="{Binding Main.ConnectDisconnectCommand}" Content="{Binding Main.ConnectDisconnectButtonText}" MinWidth="100"/>
-        </Grid>
-        <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
