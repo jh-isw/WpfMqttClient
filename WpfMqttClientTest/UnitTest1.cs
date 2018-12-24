@@ -18,20 +18,20 @@ namespace WpfMqttClientTest
         public static void Initialize(TestContext tc)
         {
             testVM = new MainViewModel();
-            ConnectDisconnectCommand = testVM.ConnectDisconnectCommand;
+            //ConnectDisconnectCommand = testVM.ConnectDisconnectCommand;
             NewDatapointCommand = testVM.NewDatapointCommand;
         }
 
-        [TestMethod]
-        public void TestConnectingDisconnectButtonText()
-        {
-            Assert.AreEqual(testVM.ConnectDisconnectButtonText, "Connect");
-            testVM.BrokerUri = "iot.eclipse.org";
-            ConnectDisconnectCommand.Execute(this);
-            Assert.AreEqual(testVM.ConnectDisconnectButtonText, "Disconnect");
-            ConnectDisconnectCommand.Execute(this);
-            Assert.AreEqual(testVM.ConnectDisconnectButtonText, "Connect");
-        }
+        //[TestMethod]
+        //public void TestConnectingDisconnectButtonText() // Gibt es nicht mehr!
+        //{
+        //    Assert.AreEqual(testVM.ConnectDisconnectButtonText, "Connect");
+        //    testVM.BrokerUri = "iot.eclipse.org";
+        //    ConnectDisconnectCommand.Execute(this);
+        //    Assert.AreEqual(testVM.ConnectDisconnectButtonText, "Disconnect");
+        //    ConnectDisconnectCommand.Execute(this);
+        //    Assert.AreEqual(testVM.ConnectDisconnectButtonText, "Connect");
+        //}
 
         //[TestMethod]
         //public void TestSubscribing()
