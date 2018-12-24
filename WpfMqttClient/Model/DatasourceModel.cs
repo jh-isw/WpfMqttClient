@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace WpfMqttClient.Model
 {
-    class DatasourceModel : ModelBase
+    public class DatasourceModel : ModelBase
     {
         public DatasourceModel(string brokerUri, bool withTls)
         {
