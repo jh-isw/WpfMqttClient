@@ -13,12 +13,9 @@ namespace WpfMqttClient.Model
 {
     class DatasourceModel : ModelBase
     {
-        public DatasourceModel()
+        public DatasourceModel(string brokerUri, bool withTls)
         {
-        }
-
-        public DatasourceModel(bool withTls)
-        {
+            BrokerUri = brokerUri;
             ClientId = Guid.NewGuid().ToString();
             IMqttClientOptions options;
             if (withTls)
@@ -48,7 +45,7 @@ namespace WpfMqttClient.Model
             _client.ConnectingFailed += OnConnectingFailed;
         }
 
-        public IManagedMqttClient _client { get; }
+        private IManagedMqttClient _client { get; }
         private ManagedMqttClientOptions _managedOptions;
 
         private string _clientId;
@@ -117,17 +114,17 @@ namespace WpfMqttClient.Model
 
         private void OnConnected(object sender, MqttClientConnectedEventArgs e)
         {
-            throw new NotImplementedException();
+            ConnectedToBroker = true;
         }
 
         private void OnDisconnected(object sender, MqttClientDisconnectedEventArgs e)
         {
-            throw new NotImplementedException();
+            ConnectedToBroker = false;
         }
 
         private void OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
         {
-            throw new NotImplementedException();
+            ConnectedToBroker = true;
         }
     }
 }
