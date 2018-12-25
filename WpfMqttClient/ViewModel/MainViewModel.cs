@@ -49,13 +49,16 @@ namespace WpfMqttClient.ViewModel
                     + "the"  + Environment.NewLine
                     + "lazy" + Environment.NewLine
                     + "dog" + Environment.NewLine;
-                Datapoints.Add(new DatapointModel { Identifier = "foo", Value = "bar" });
             }
             else
             {
                 WindowTitle = "Generic MQTT Client using WPF and MQTTnet";
 
                 DispatcherHelper.Initialize();
+
+                ConnectCommand = new RelayCommand(OnConnectCommandExecuted, OnConnectCommandCanExecute);
+                
+                DisconnectCommand = new RelayCommand(OnDisconnectCommandExecuted, OnDisconnectCommandCanExecute);
 
                 AddDatasourceCommand = new RelayCommand(OnAddDatasourceExecuted, OnAddDatasourceCanExecute);
                 AddDatasourceReturnKeyCommand = new RelayCommand(OnAddDatasourceExecuted, null);
@@ -69,6 +72,8 @@ namespace WpfMqttClient.ViewModel
 
                 WithTlsCommand = new RelayCommand(OnWithTlsExecuted, null);
 
+                EvaluateDatasourcesContextMenu = new RelayCommand(OnEvaluateDatasourcesContextMenuExecuted, null);
+
                 ClientId = Guid.NewGuid().ToString();
 
                 ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
@@ -80,7 +85,7 @@ namespace WpfMqttClient.ViewModel
                 DatasourcesView = CollectionViewSource.GetDefaultView(Datasources) as ListCollectionView;
                 DatasourcesView.CurrentChanged += (s, e) =>
                 {
-                    RaisePropertyChanged(() => SelectedDatasourceModel); Console.WriteLine("current changed");
+                    RaisePropertyChanged(() => SelectedDatasourceModel);
                 };
                 
                 var dpList = new List<DatapointModel>();
@@ -240,9 +245,14 @@ namespace WpfMqttClient.ViewModel
                 RaisePropertyChanged();
             }
         }
+        
         public ICollectionView DatasourcesView { get; }
 
         #region Commands
+        public RelayCommand ConnectCommand { get; private set; }
+
+        public RelayCommand DisconnectCommand { get; private set; }
+
         public RelayCommand AddDatasourceCommand { get; private set; }
         public static RelayCommand AddDatasourceReturnKeyCommand { get; private set; }
 
@@ -254,6 +264,28 @@ namespace WpfMqttClient.ViewModel
         public RelayCommand ClearOutputBoxContent { get; private set; }
 
         public RelayCommand WithTlsCommand { get; private set; }
+
+        public RelayCommand EvaluateDatasourcesContextMenu { get; private set; }
+
+        private void OnConnectCommandExecuted()
+        {
+            SelectedDatasourceModel.StartClientAsync();
+        }
+
+        private bool OnConnectCommandCanExecute()
+        {
+            return !SelectedDatasourceModel.ConnectedToBroker;
+        }
+
+        private void OnDisconnectCommandExecuted()
+        {
+            SelectedDatasourceModel.StopClientAsync();
+        }
+
+        private bool OnDisconnectCommandCanExecute()
+        {
+            return SelectedDatasourceModel.ConnectedToBroker;
+        }
         
         private void OnAddDatasourceExecuted()
         {
@@ -293,15 +325,17 @@ namespace WpfMqttClient.ViewModel
             WithTls = !WithTls;
             Console.WriteLine(WithTls? "TLS enabled" : "TLS disabled");
         }
+
+        private void OnEvaluateDatasourcesContextMenuExecuted()
+        {
+            ConnectCommand.RaiseCanExecuteChanged();
+            DisconnectCommand.RaiseCanExecuteChanged();
+        }
         #endregion
 
         public void DoCleanup(DoCleanupMessage obj)
         {
-            //if (Client != null && Client.IsConnected)
-            //{
-            //    Client.StopAsync();
-            //    Client.Dispose();
-            //}
+
         }
 
         public class DoCleanupMessage
