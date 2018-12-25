@@ -55,6 +55,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="25" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Label Content="Broker URI:" />
@@ -64,7 +65,11 @@
                             </TextBox.InputBindings>
                         </TextBox>
                         <Button Grid.Column="2" Command="{Binding Main.ConnectCommand}" Content="Connect" MinWidth="100"/>
-                        <DataGrid Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding Main.DatasourcesView}"></DataGrid>
+                        <Label Content="Current:" Grid.Row="1" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                   Text="{Binding Main.SelectedDatasourceModel.ClientId, UpdateSourceTrigger=PropertyChanged}" />
+                        <DataGrid Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding Main.DatasourcesView}" IsReadOnly="True"
+                                  IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True"></DataGrid>
                     </Grid>
                 </GroupBox>
             </TabItem>
