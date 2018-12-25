@@ -20,20 +20,6 @@
                           IsChecked="{Binding Main.WithTls}" />
             </MenuItem>
         </Menu>
-        <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <Label Content="Topic Name:" />
-            <TextBox Grid.Column="1" Text="{Binding Main.NewDatapointName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <TextBox.InputBindings>
-                    <KeyBinding Key="Return" Command="{Binding Main.NewDatapointReturnKeyCommand}" />
-                </TextBox.InputBindings>
-            </TextBox>
-            <Button Grid.Column="2" Command="{Binding Main.NewDatapointCommand}" Content="Subscribe" MinWidth="100" />
-        </Grid>
         <GroupBox DockPanel.Dock="Bottom" Header="Application Output">
             <TextBox Name="OutputBox" DockPanel.Dock="Bottom" Text="{Binding Main.ApplicationMessages}"
                  Height="90" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" IsReadOnly="True" >
@@ -75,14 +61,32 @@
             </TabItem>
             <TabItem Header="Datenpunkte">
                 <GroupBox Header="Datenpunkte">
-                    <DataGrid ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
-                      AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" >
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Topic Name:" />
+                        <TextBox Grid.Column="1" Text="{Binding Main.NewDatapointName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Return" Command="{Binding Main.NewDatapointReturnKeyCommand}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <Button Grid.Column="2" Command="{Binding Main.NewDatapointCommand}" Content="Subscribe" MinWidth="100" />
+                        <DataGrid Grid.Row="1" Grid.ColumnSpan="3"  ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
+                          AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" >
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
                 </GroupBox>
             </TabItem>
         </TabControl>
