@@ -10,6 +10,34 @@ namespace WpfMqttClient.Model
 {
     public class DatapointModel : ModelBase
     {
+        public DatapointModel(string clientId, string identifier, string value)
+        {
+            ClientId = clientId;
+            Identifier = identifier;
+            Value = value;
+        }
+
+        private string _clientId;
+        public string ClientId
+        {
+            get
+            {
+                return _clientId;
+            }
+            set
+            {
+                if (value == _clientId)
+                {
+                    return;
+                }
+                _clientId = value;
+#if DEBUG
+                Console.WriteLine("clientId :" + value);
+#endif
+                OnPropertyChanged();
+            }
+        }
+
         private string _identifier;
         public string Identifier
         {
@@ -32,6 +60,7 @@ namespace WpfMqttClient.Model
         }
 
         private string _value;
+        
         public string Value
         {
             get

@@ -43,8 +43,9 @@ namespace WpfMqttClient.Model
             _client.Connected += OnConnected;
             _client.Disconnected += OnDisconnected;
             _client.ConnectingFailed += OnConnectingFailed;
+            _client.ApplicationMessageReceived += _client_ApplicationMessageReceived;
         }
-
+        
         private IManagedMqttClient _client { get; }
         private ManagedMqttClientOptions _managedOptions;
 
@@ -102,6 +103,8 @@ namespace WpfMqttClient.Model
             }
         }
 
+        public event EventHandler<MessageReceivedEventArgs> OnMessageReceived;
+
         public async void StartClientAsync()
         {
             await _client.StartAsync(_managedOptions);
@@ -110,6 +113,11 @@ namespace WpfMqttClient.Model
         public async void StopClientAsync()
         {
             await _client.StopAsync();
+        }
+
+        public async void SubscribeToTopic(string topicName)
+        {
+            await _client.SubscribeAsync(new TopicFilterBuilder().WithTopic(topicName).Build());
         }
 
         private void OnConnected(object sender, MqttClientConnectedEventArgs e)
@@ -126,5 +134,26 @@ namespace WpfMqttClient.Model
         {
             ConnectedToBroker = true;
         }
+
+        private void _client_ApplicationMessageReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
+        {
+            OnMessageReceived(this,
+                new MessageReceivedEventArgs(ClientId, e.ApplicationMessage.Topic,
+                    Encoding.Default.GetString(e.ApplicationMessage.Payload)));
+        }
+    }
+
+    public class MessageReceivedEventArgs : EventArgs
+    {
+        public MessageReceivedEventArgs(string datasource, string datapoint, string message)
+        {
+            Datasource = datasource;
+            Datapoint = datapoint;
+            Message = message;
+        }
+
+        public string Datasource { get; set; }
+        public string Datapoint { get; set; }
+        public string Message { get; set; }
     }
 }

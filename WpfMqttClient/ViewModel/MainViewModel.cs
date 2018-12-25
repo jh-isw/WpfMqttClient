@@ -74,10 +74,6 @@ namespace WpfMqttClient.ViewModel
 
                 EvaluateDatasourcesContextMenu = new RelayCommand(OnEvaluateDatasourcesContextMenuExecuted, null);
 
-                ClientId = Guid.NewGuid().ToString();
-
-                ApplicationMessages = "Disconnected.\nClientId: " + ClientId + "\n";
-
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
 
                 var dsList = new List<DatasourceModel>();
@@ -89,17 +85,7 @@ namespace WpfMqttClient.ViewModel
                 };
                 
                 var dpList = new List<DatapointModel>();
-                dpList.Add(new DatapointModel
-                {
-                    Identifier = "$SYS/broker/uptime",
-                    Value = ""
-                });
                 Datapoints = new ObservableCollection<DatapointModel>(dpList);
-                foreach(var item in Datapoints)
-                {
-                    item.PropertyChanged += DatapointsPropertyChanged;
-                }
-
                 DatapointsView = CollectionViewSource.GetDefaultView(Datapoints) as ListCollectionView;
                 DatapointsView.CurrentChanged += (s, e) =>
                 {
@@ -150,25 +136,7 @@ namespace WpfMqttClient.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-        private string _clientId;
-        public string ClientId
-        {
-            get
-            {
-                return _clientId;
-            }
-            set
-            {
-                if (value == _clientId)
-                {
-                    return;
-                }
-                _clientId = value;
-                RaisePropertyChanged();
-            }
-        }
-
+        
         private string _newDatapointName;
         public string NewDatapointName
         {
@@ -289,10 +257,12 @@ namespace WpfMqttClient.ViewModel
         
         private void OnAddDatasourceExecuted()
         {
-            Datasources.Add(new DatasourceModel(BrokerUri, WithTls));
+            var ds = new DatasourceModel(BrokerUri, WithTls);
+            ds.OnMessageReceived += Ds_OnMessageReceived;
+            Datasources.Add(ds);
             BrokerUri = "";
         }
-
+        
         private bool OnAddDatasourceCanExecute()
         {
             return true;
@@ -300,10 +270,13 @@ namespace WpfMqttClient.ViewModel
 
         private void OnNewDatapointExecuted()
         {
-            //await Client.SubscribeAsync(new TopicFilterBuilder().WithTopic(/*"$SYS/broker/uptime"*/NewDatapointName).Build());
+            var dp = new DatapointModel(SelectedDatasourceModel.ClientId, NewDatapointName, String.Empty);
+            dp.PropertyChanged += Dp_PropertyChanged;
+            Datapoints.Add(dp);
+            SelectedDatasourceModel.SubscribeToTopic(NewDatapointName);
             NewDatapointName = "";
         }
-
+        
         private bool OnNewDatapointCanExecute()
         {
             return true;
@@ -332,6 +305,23 @@ namespace WpfMqttClient.ViewModel
             DisconnectCommand.RaiseCanExecuteChanged();
         }
         #endregion
+
+        private void Ds_OnMessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            foreach(var item in Datapoints)
+            {
+                if(item.ClientId == e.Datasource && item.Identifier == e.Datapoint)
+                {
+                    item.Value = e.Message;
+                    break;
+                }
+            }
+        }
+
+        private void Dp_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            DispatcherHelper.RunAsync(() => DatapointsView.Refresh());
+        }
 
         public void DoCleanup(DoCleanupMessage obj)
         {
