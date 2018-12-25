@@ -47,10 +47,10 @@
                         <Label Content="Broker URI:" />
                         <TextBox Grid.Column="1" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.InputBindings>
-                                <KeyBinding Key="Return" Command="{Binding Main.ConnectReturnKeyCommand}" />
+                                <KeyBinding Key="Return" Command="{Binding Main.AddDatasourceReturnKeyCommand}" />
                             </TextBox.InputBindings>
                         </TextBox>
-                        <Button Grid.Column="2" Command="{Binding Main.ConnectCommand}" Content="Connect" MinWidth="100"/>
+                        <Button Grid.Column="2" Command="{Binding Main.AddDatasourceCommand}" Content="Add" MinWidth="100"/>
                         <Label Content="Current:" Grid.Row="1" />
                         <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                    Text="{Binding Main.SelectedDatasourceModel.ClientId, UpdateSourceTrigger=PropertyChanged}" />

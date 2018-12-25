@@ -57,8 +57,8 @@ namespace WpfMqttClient.ViewModel
 
                 DispatcherHelper.Initialize();
 
-                ConnectCommand = new RelayCommand(OnConnectExecuted, OnConnectCanExecute);
-                ConnectReturnKeyCommand = new RelayCommand(OnConnectExecuted, null);
+                AddDatasourceCommand = new RelayCommand(OnAddDatasourceExecuted, OnAddDatasourceCanExecute);
+                AddDatasourceReturnKeyCommand = new RelayCommand(OnAddDatasourceExecuted, null);
 
                 NewDatapointCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapointCanExecute);
                 NewDatapointReturnKeyCommand = new RelayCommand(OnNewDatapointExecuted, OnNewDatapointCanExecute);
@@ -243,8 +243,8 @@ namespace WpfMqttClient.ViewModel
         public ICollectionView DatasourcesView { get; }
 
         #region Commands
-        public RelayCommand ConnectCommand { get; private set; }
-        public static RelayCommand ConnectReturnKeyCommand { get; private set; }
+        public RelayCommand AddDatasourceCommand { get; private set; }
+        public static RelayCommand AddDatasourceReturnKeyCommand { get; private set; }
 
         public RelayCommand NewDatapointCommand { get; private set; }
         public static RelayCommand NewDatapointReturnKeyCommand { get; private set; }
@@ -255,13 +255,13 @@ namespace WpfMqttClient.ViewModel
 
         public RelayCommand WithTlsCommand { get; private set; }
         
-        private void OnConnectExecuted()
+        private void OnAddDatasourceExecuted()
         {
             Datasources.Add(new DatasourceModel(BrokerUri, WithTls));
             BrokerUri = "";
         }
 
-        private bool OnConnectCanExecute()
+        private bool OnAddDatasourceCanExecute()
         {
             return true;
         }
