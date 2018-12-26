@@ -60,7 +60,6 @@ namespace WpfMqttClient.Model
         }
 
         private string _value;
-        
         public string Value
         {
             get
@@ -83,7 +82,7 @@ namespace WpfMqttClient.Model
 
         public override string ToString()
         {
-            return Identifier + ", " + Value;
+            return ClientId + ", " + Identifier + ", " + Value;
         }
     }
 }
