@@ -259,6 +259,7 @@ namespace WpfMqttClient.ViewModel
         {
             var ds = new DatasourceModel(BrokerUri, WithTls);
             ds.OnMessageReceived += Ds_OnMessageReceived;
+            ds.OnConnectionFailed += Ds_OnConnectionFailed;
             Datasources.Add(ds);
             BrokerUri = "";
         }
@@ -316,6 +317,11 @@ namespace WpfMqttClient.ViewModel
                     break;
                 }
             }
+        }
+
+        private void Ds_OnConnectionFailed(object sender, ConnectionFailedEventArgs e)
+        {
+            ApplicationMessages += e.Datasource + ": Connection failed." + Environment.NewLine;
         }
 
         private void Dp_PropertyChanged(object sender, PropertyChangedEventArgs e)

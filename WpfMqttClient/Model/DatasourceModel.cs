@@ -40,9 +40,9 @@ namespace WpfMqttClient.Model
                 .Build();
 
             _client = new MqttFactory().CreateManagedMqttClient();
-            _client.Connected += OnConnected;
-            _client.Disconnected += OnDisconnected;
-            _client.ConnectingFailed += OnConnectingFailed;
+            _client.Connected += _client_OnConnected;
+            _client.Disconnected += _client_OnDisconnected;
+            _client.ConnectingFailed += _client_OnConnectingFailed;
             _client.ApplicationMessageReceived += _client_ApplicationMessageReceived;
         }
         
@@ -104,6 +104,7 @@ namespace WpfMqttClient.Model
         }
 
         public event EventHandler<MessageReceivedEventArgs> OnMessageReceived;
+        public event EventHandler<ConnectionFailedEventArgs> OnConnectionFailed;
 
         public async void StartClientAsync()
         {
@@ -120,19 +121,20 @@ namespace WpfMqttClient.Model
             await _client.SubscribeAsync(new TopicFilterBuilder().WithTopic(topicName).Build());
         }
 
-        private void OnConnected(object sender, MqttClientConnectedEventArgs e)
+        private void _client_OnConnected(object sender, MqttClientConnectedEventArgs e)
         {
             IsConnectedToBroker = true;
         }
 
-        private void OnDisconnected(object sender, MqttClientDisconnectedEventArgs e)
+        private void _client_OnDisconnected(object sender, MqttClientDisconnectedEventArgs e)
         {
             IsConnectedToBroker = false;
         }
 
-        private void OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
+        private void _client_OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
         {
             IsConnectedToBroker = false;
+            OnConnectionFailed(this, new ConnectionFailedEventArgs(ClientId));
         }
 
         private void _client_ApplicationMessageReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
@@ -142,7 +144,7 @@ namespace WpfMqttClient.Model
                     Encoding.Default.GetString(e.ApplicationMessage.Payload)));
         }
     }
-
+    
     public class MessageReceivedEventArgs : EventArgs
     {
         public MessageReceivedEventArgs(string datasource, string datapoint, string message)
@@ -155,5 +157,15 @@ namespace WpfMqttClient.Model
         public string Datasource { get; set; }
         public string Datapoint { get; set; }
         public string Message { get; set; }
+    }
+
+    public class ConnectionFailedEventArgs
+    {
+        public ConnectionFailedEventArgs(string datasource)
+        {
+            Datasource = datasource;
+        }
+
+        public string Datasource { get; set; }
     }
 }
