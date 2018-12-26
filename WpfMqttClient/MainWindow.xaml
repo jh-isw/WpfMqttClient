@@ -66,6 +66,7 @@
                                 <ContextMenu>
                                     <MenuItem Header="Start" Command="{Binding Main.ConnectCommand}" />
                                     <MenuItem Header="Stop" Command="{Binding Main.DisconnectCommand}" />
+                                    <MenuItem Header="Remove" Command="{Binding Main.EraseDatasourceCommand}" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>

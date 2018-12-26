@@ -74,6 +74,8 @@ namespace WpfMqttClient.ViewModel
 
                 EvaluateDatasourcesContextMenu = new RelayCommand(OnEvaluateDatasourcesContextMenuExecuted, null);
 
+                EraseDatasourceCommand = new RelayCommand(OnEraseDatasourceCommandExecuted, null);
+
                 Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
 
                 var dsList = new List<DatasourceModel>();
@@ -93,7 +95,7 @@ namespace WpfMqttClient.ViewModel
                 };
             }
         }
-
+        
         private void DatapointsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             DispatcherHelper.RunAsync(() => DatapointsView.Refresh());
@@ -235,6 +237,8 @@ namespace WpfMqttClient.ViewModel
 
         public RelayCommand EvaluateDatasourcesContextMenu { get; private set; }
 
+        public RelayCommand EraseDatasourceCommand { get; private set; }
+
         private void OnConnectCommandExecuted()
         {
             SelectedDatasourceModel.StartClientAsync();
@@ -304,6 +308,20 @@ namespace WpfMqttClient.ViewModel
         {
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
+        }
+
+        private void OnEraseDatasourceCommandExecuted()
+        {
+            // TODO
+            //foreach (var item in Datapoints)
+            //{
+            //    if(item.ClientId == SelectedDatasourceModel.ClientId)
+            //    {
+            //        Datapoints.Remove(item); // will cause stress
+            //    }
+            //}
+            ////unsubscribe ds
+            //Datasources.RemoveAt(DatasourcesView.CurrentPosition);
         }
         #endregion
 
