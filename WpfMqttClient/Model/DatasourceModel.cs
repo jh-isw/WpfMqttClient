@@ -86,7 +86,7 @@ namespace WpfMqttClient.Model
         }
 
         private bool _connectedToBroker;
-        public bool ConnectedToBroker
+        public bool IsConnectedToBroker
         {
             get
             {
@@ -122,17 +122,17 @@ namespace WpfMqttClient.Model
 
         private void OnConnected(object sender, MqttClientConnectedEventArgs e)
         {
-            ConnectedToBroker = true;
+            IsConnectedToBroker = true;
         }
 
         private void OnDisconnected(object sender, MqttClientDisconnectedEventArgs e)
         {
-            ConnectedToBroker = false;
+            IsConnectedToBroker = false;
         }
 
         private void OnConnectingFailed(object sender, MqttManagedProcessFailedEventArgs e)
         {
-            ConnectedToBroker = true;
+            IsConnectedToBroker = false;
         }
 
         private void _client_ApplicationMessageReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
