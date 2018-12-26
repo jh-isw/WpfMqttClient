@@ -242,7 +242,7 @@ namespace WpfMqttClient.ViewModel
 
         private bool OnConnectCommandCanExecute()
         {
-            return !SelectedDatasourceModel.IsConnectedToBroker;
+            return true; // !SelectedDatasourceModel.IsConnectedToBroker;
         }
 
         private void OnDisconnectCommandExecuted()
@@ -252,7 +252,7 @@ namespace WpfMqttClient.ViewModel
 
         private bool OnDisconnectCommandCanExecute()
         {
-            return SelectedDatasourceModel.IsConnectedToBroker;
+            return true; // SelectedDatasourceModel.IsConnectedToBroker;
         }
         
         private void OnAddDatasourceExecuted()
