@@ -159,7 +159,7 @@ namespace WpfMqttClient.Model
         public string Message { get; set; }
     }
 
-    public class ConnectionFailedEventArgs
+    public class ConnectionFailedEventArgs : EventArgs
     {
         public ConnectionFailedEventArgs(string datasource)
         {
