@@ -99,6 +99,11 @@
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
                             </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Remove" Command="{Binding Main.RemoveDatapointCommand}" />
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                         </DataGrid>
                     </Grid>
                 </GroupBox>

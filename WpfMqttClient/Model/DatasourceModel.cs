@@ -121,6 +121,11 @@ namespace WpfMqttClient.Model
             await _client.SubscribeAsync(new TopicFilterBuilder().WithTopic(topicName).Build());
         }
 
+        public async void Unsubscribe(string topicName)
+        {
+            await _client.UnsubscribeAsync(topicName);
+        }
+
         private void _client_OnConnected(object sender, MqttClientConnectedEventArgs e)
         {
             IsConnectedToBroker = true;

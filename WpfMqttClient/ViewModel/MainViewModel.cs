@@ -55,6 +55,7 @@ namespace WpfMqttClient.ViewModel
                 WindowTitle = "Generic MQTT Client using WPF and MQTTnet";
 
                 DispatcherHelper.Initialize();
+                Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
 
                 ConnectCommand = new RelayCommand(OnConnectCommandExecuted, OnConnectCommandCanExecute);
                 
@@ -76,8 +77,8 @@ namespace WpfMqttClient.ViewModel
 
                 EraseDatasourceCommand = new RelayCommand(OnEraseDatasourceCommandExecuted, null);
 
-                Messenger.Default.Register<DoCleanupMessage>(this, DoCleanup);
-
+                RemoveDatapointCommand = new RelayCommand(OnRemoveDatapointCommandExecuted, null);
+                
                 var dsList = new List<DatasourceModel>();
                 Datasources = new ObservableCollection<DatasourceModel>(dsList);
                 DatasourcesView = CollectionViewSource.GetDefaultView(Datasources) as ListCollectionView;
@@ -239,6 +240,8 @@ namespace WpfMqttClient.ViewModel
 
         public RelayCommand EraseDatasourceCommand { get; private set; }
 
+        public RelayCommand RemoveDatapointCommand { get; private set; }
+
         private void OnConnectCommandExecuted()
         {
             SelectedDatasourceModel.StartClientAsync();
@@ -275,7 +278,7 @@ namespace WpfMqttClient.ViewModel
 
         private void OnNewDatapointExecuted()
         {
-            var dp = new DatapointModel(SelectedDatasourceModel.ClientId, NewDatapointName, String.Empty);
+            var dp = new DatapointModel(SelectedDatasourceModel.ClientId, NewDatapointName, string.Empty);
             dp.PropertyChanged += Dp_PropertyChanged;
             Datapoints.Add(dp);
             SelectedDatasourceModel.SubscribeToTopic(NewDatapointName);
@@ -322,6 +325,19 @@ namespace WpfMqttClient.ViewModel
             //}
             ////unsubscribe ds
             //Datasources.RemoveAt(DatasourcesView.CurrentPosition);
+        }
+
+        private void OnRemoveDatapointCommandExecuted()
+        {
+            try
+            {
+                Datapoints.Remove(SelectedDatapointModel);
+            }
+            catch (Exception e)
+            {
+                ApplicationMessages += e.Message;
+                throw;
+            }
         }
         #endregion
 
