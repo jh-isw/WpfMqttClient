@@ -278,10 +278,13 @@ namespace WpfMqttClient.ViewModel
 
         private void OnNewDatapointExecuted()
         {
-            var dp = new DatapointModel(SelectedDatasourceModel.ClientId, NewDatapointName, string.Empty);
-            dp.PropertyChanged += Dp_PropertyChanged;
-            Datapoints.Add(dp);
-            SelectedDatasourceModel.SubscribeToTopic(NewDatapointName);
+            //var dp = new DatapointModel(SelectedDatasourceModel.ClientId, NewDatapointName, string.Empty);
+            //dp.PropertyChanged += Dp_PropertyChanged;
+            //Datapoints.Add(dp);
+            if(NewDatapointName != String.Empty)
+            {
+                SelectedDatasourceModel.SubscribeToTopic(NewDatapointName);
+            }
             NewDatapointName = "";
         }
         
@@ -343,13 +346,22 @@ namespace WpfMqttClient.ViewModel
 
         private void Ds_OnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
+            bool found = false;
             foreach(var item in Datapoints)
             {
                 if(item.ClientId == e.Datasource && item.Identifier == e.Datapoint)
                 {
                     item.Value = e.Message;
+                    found = true;
                     break;
                 }
+            }
+
+            if (!found)
+            {
+                var dp = new DatapointModel(e.Datasource, e.Datapoint, e.Message);
+                dp.PropertyChanged += Dp_PropertyChanged;
+                DispatcherHelper.RunAsync(() => Datapoints.Add(dp));
             }
         }
 
