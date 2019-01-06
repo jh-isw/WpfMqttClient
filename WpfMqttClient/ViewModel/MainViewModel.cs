@@ -307,7 +307,7 @@ namespace WpfMqttClient.ViewModel
         private void OnWithTlsExecuted()
         {
             WithTls = !WithTls;
-            Console.WriteLine(WithTls? "TLS enabled" : "TLS disabled");
+            ApplicationMessages += WithTls? "TLS eingeschaltet\n" : "TLS ausgeschaltet\n";
         }
 
         private void OnEvaluateDatasourcesContextMenuExecuted()
