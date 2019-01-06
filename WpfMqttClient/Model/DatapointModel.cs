@@ -12,9 +12,28 @@ namespace WpfMqttClient.Model
     {
         public DatapointModel(string clientId, string identifier, string value)
         {
+            ClientTime = DateTime.Now;
             ClientId = clientId;
             Identifier = identifier;
             Value = value;
+        }
+
+        private DateTime _clientTime;
+        public DateTime ClientTime
+        {
+            get
+            {
+                return _clientTime;
+            }
+            set
+            {
+                if (value == _clientTime)
+                {
+                    return;
+                }
+                _clientTime = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _clientId;
@@ -31,9 +50,6 @@ namespace WpfMqttClient.Model
                     return;
                 }
                 _clientId = value;
-#if DEBUG
-                Console.WriteLine("clientId :" + value);
-#endif
                 OnPropertyChanged();
             }
         }
@@ -73,16 +89,14 @@ namespace WpfMqttClient.Model
                     return;
                 }
                 _value = value;
-#if DEBUG
-                Console.WriteLine("value: " + value);
-#endif
+                ClientTime = DateTime.Now;
                 OnPropertyChanged();
             }
         }
 
         public override string ToString()
         {
-            return ClientId + ", " + Identifier + ", " + Value;
+            return ClientTime.ToString() + ", " + ClientId + ", " + Identifier + ", " + Value;
         }
     }
 }

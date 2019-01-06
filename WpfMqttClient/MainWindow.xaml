@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:WpfMqttClient"
     xmlns:ViewModel="clr-namespace:WpfMqttClient.ViewModel" x:Class="WpfMqttClient.MainWindow"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-    mc:Ignorable="d" Title="{Binding Main.WindowTitle, Mode=OneWay}" Width="500">
+    mc:Ignorable="d" Title="{Binding Main.WindowTitle, Mode=OneWay}" Width="600">
     <Window.DataContext>
         <ViewModel:ViewModelLocator/>
     </Window.DataContext>
@@ -104,8 +104,8 @@
                         <DataGrid Grid.Row="1" Grid.ColumnSpan="3"  ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
                           AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" >
-                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Client-Zeit" Width="auto" Binding="{Binding Path=ClientTime}" />
+                                <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" />
                                 <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
                             </DataGrid.Columns>
                             <DataGrid.ContextMenu>
