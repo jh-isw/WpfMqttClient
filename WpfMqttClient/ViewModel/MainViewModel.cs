@@ -75,7 +75,7 @@ namespace WpfMqttClient.ViewModel
 
                 EvaluateDatasourcesContextMenu = new RelayCommand(OnEvaluateDatasourcesContextMenuExecuted, null);
 
-                EraseDatasourceCommand = new RelayCommand(OnEraseDatasourceCommandExecuted, null);
+                EraseDatasourceCommand = new RelayCommand(OnEraseDatasourceCommandExecuted, OnEraseDatasourceCommandCanExecute);
 
                 RemoveDatapointCommand = new RelayCommand(OnRemoveDatapointCommandExecuted, null);
                 
@@ -249,7 +249,7 @@ namespace WpfMqttClient.ViewModel
 
         private bool OnConnectCommandCanExecute()
         {
-            return true; // !SelectedDatasourceModel.IsConnectedToBroker;
+            return SelectedDatasourceModel == null ? false : true;  // true; // !SelectedDatasourceModel.IsConnectedToBroker;
         }
 
         private void OnDisconnectCommandExecuted()
@@ -259,7 +259,7 @@ namespace WpfMqttClient.ViewModel
 
         private bool OnDisconnectCommandCanExecute()
         {
-            return true; // SelectedDatasourceModel.IsConnectedToBroker;
+            return SelectedDatasourceModel == null ? false : true;  // true; // SelectedDatasourceModel.IsConnectedToBroker;
         }
         
         private void OnAddDatasourceExecuted()
@@ -314,20 +314,30 @@ namespace WpfMqttClient.ViewModel
         {
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
+            EraseDatasourceCommand.RaiseCanExecuteChanged();
         }
 
         private void OnEraseDatasourceCommandExecuted()
         {
-            // TODO
+            if (SelectedDatasourceModel.IsConnectedToBroker)
+            {
+                SelectedDatasourceModel.StopClientAsync();
+            }
+            
             //foreach (var item in Datapoints)
             //{
             //    if(item.ClientId == SelectedDatasourceModel.ClientId)
             //    {
-            //        Datapoints.Remove(item); // will cause stress
+            //        Datapoints.Remove(item);
             //    }
             //}
-            ////unsubscribe ds
-            //Datasources.RemoveAt(DatasourcesView.CurrentPosition);
+
+            Datasources.RemoveAt(DatasourcesView.CurrentPosition);
+        }
+
+        private bool OnEraseDatasourceCommandCanExecute()
+        {
+            return SelectedDatasourceModel == null ? false : true;  // true; // ;
         }
 
         private void OnRemoveDatapointCommandExecuted()
@@ -377,7 +387,11 @@ namespace WpfMqttClient.ViewModel
 
         public void DoCleanup(DoCleanupMessage obj)
         {
-
+            foreach(DatasourceModel ds in Datasources)
+            {
+                ds.StopClientAsync();
+                ds.Dispose();
+            }
         }
 
         public class DoCleanupMessage
