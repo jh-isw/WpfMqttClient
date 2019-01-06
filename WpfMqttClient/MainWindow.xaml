@@ -57,11 +57,20 @@
                                    Text="{Binding Main.SelectedDatasourceModel.ClientId, UpdateSourceTrigger=PropertyChanged}" />
                         <DataGrid Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding Main.DatasourcesView}"
                                   IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
-                            <!--<i:Interaction.Triggers>
+                            <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseRightButtonDown">
                                     <i:InvokeCommandAction Command="{Binding Main.EvaluateDatasourcesContextMenu}" />
                                 </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
+                            </i:Interaction.Triggers>
+                            <!--<DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="LightBlue" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>-->
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Start" Command="{Binding Main.ConnectCommand}" />
