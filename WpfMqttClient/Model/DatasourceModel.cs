@@ -2,16 +2,11 @@
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace WpfMqttClient.Model
 {
-    public class DatasourceModel : ModelBase
+    public class DatasourceModel : ModelBase, IDisposable
     {
         public DatasourceModel(string brokerUri, bool withTls)
         {
@@ -147,6 +142,11 @@ namespace WpfMqttClient.Model
             OnMessageReceived(this,
                 new MessageReceivedEventArgs(ClientId, e.ApplicationMessage.Topic,
                     Encoding.Default.GetString(e.ApplicationMessage.Payload)));
+        }
+
+        public void Dispose()
+        {
+            _client.Dispose();
         }
     }
     
