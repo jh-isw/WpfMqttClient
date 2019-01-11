@@ -371,6 +371,7 @@ namespace WpfMqttClient.ViewModel
 
         private void Ds_OnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
+            //ApplicationMessages += "Ds_OnMessageReceived, " + e.Datapoint + ", " + e.Message + "\n";
             bool found = false;
             foreach(var item in Datapoints)
             {
