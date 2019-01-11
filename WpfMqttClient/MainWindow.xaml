@@ -133,7 +133,7 @@
                         <DataGrid Grid.Row="3" Grid.ColumnSpan="3"  ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
                           AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Client-Zeit" Width="auto" Binding="{Binding Path=ClientTime}" />
+                                <DataGridTextColumn Header="Client-Zeit" Width="auto" Binding="{Binding Path=ClientTime, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />
                                 <DataGridTextColumn Header="Name" Width="300" Binding="{Binding Path=Identifier}" />
                                 <DataGridTextColumn Header="Wert" Width="*" Binding="{Binding Path=Value}" />
                             </DataGrid.Columns>
