@@ -78,6 +78,8 @@ namespace WpfMqttClient.ViewModel
                 EraseDatasourceCommand = new RelayCommand(OnEraseDatasourceCommandExecuted, OnEraseDatasourceCommandCanExecute);
 
                 RemoveDatapointCommand = new RelayCommand(OnRemoveDatapointCommandExecuted, null);
+
+                UnsubscribeCommand = new RelayCommand<object>(OnUnsubscribeCommandExecuted, null);
                 
                 var dsList = new List<DatasourceModel>();
                 Datasources = new ObservableCollection<DatasourceModel>(dsList);
@@ -96,7 +98,7 @@ namespace WpfMqttClient.ViewModel
                 };
             }
         }
-        
+
         private void DatapointsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             DispatcherHelper.RunAsync(() => DatapointsView.Refresh());
@@ -242,6 +244,8 @@ namespace WpfMqttClient.ViewModel
 
         public RelayCommand RemoveDatapointCommand { get; private set; }
 
+        public RelayCommand<object> UnsubscribeCommand { get; private set; }
+
         private void OnConnectCommandExecuted()
         {
             SelectedDatasourceModel.StartClientAsync();
@@ -342,6 +346,8 @@ namespace WpfMqttClient.ViewModel
 
         private void OnRemoveDatapointCommandExecuted()
         {
+            OnUnsubscribeCommandExecuted(SelectedDatapointModel.Identifier);
+
             try
             {
                 Datapoints.Remove(SelectedDatapointModel);
@@ -350,6 +356,15 @@ namespace WpfMqttClient.ViewModel
             {
                 ApplicationMessages += e.Message;
                 throw;
+            }
+        }
+
+        private void OnUnsubscribeCommandExecuted(object obj)
+        {
+            var topic = obj as string;
+            if(topic != null && topic != String.Empty)
+            {
+                SelectedDatasourceModel.Unsubscribe(topic);
             }
         }
         #endregion

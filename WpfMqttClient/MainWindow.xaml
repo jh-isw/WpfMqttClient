@@ -42,19 +42,19 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
-                            <RowDefinition Height="25" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Label Content="Broker URI:" />
-                        <TextBox Grid.Column="1" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Label Content="Broker URI:" Margin="0,15,0,0"/>
+                        <TextBox Grid.Column="1" Text="{Binding Main.BrokerUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,15,0,0">
                             <TextBox.InputBindings>
                                 <KeyBinding Key="Return" Command="{Binding Main.AddDatasourceReturnKeyCommand}" />
                             </TextBox.InputBindings>
                         </TextBox>
-                        <Button Grid.Column="2" Command="{Binding Main.AddDatasourceCommand}" Content="Add" MinWidth="100"/>
+                        <Button Grid.Column="2" Command="{Binding Main.AddDatasourceCommand}" Content="Add" MinWidth="100" Margin="0,15,0,0"/>
                         <Label Content="Ausgewählt:" Grid.Row="1" />
                         <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                   Text="{Binding Main.SelectedDatasourceModel.ClientId, UpdateSourceTrigger=PropertyChanged}" />
+                                   Text="{Binding Main.SelectedDatasourceModel.ClientId, UpdateSourceTrigger=PropertyChanged}" Padding="0,5,0,0"/>
                         <DataGrid Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding Main.DatasourcesView}"
                                   IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
                             <i:Interaction.Triggers>
@@ -91,17 +91,46 @@
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="15"/>
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Label Content="Topic Name:" />
-                        <TextBox Grid.Column="1" Text="{Binding Main.NewDatapointName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBox.InputBindings>
+                        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
+                            <RadioButton Name="RadioButtonSubscribe" Content="Subscribe" IsChecked="True" Margin="80,0,0,0" />
+                            <RadioButton Name="RadioButtonUnsubscribe" Content="Unsubscribe" Margin="20,0,0,0" />
+                        </StackPanel>
+                        <Label Content="Topic Name:" Grid.Row="1" />
+                        <TextBox Grid.Column="1" Name="DatapointNameTextBox" Text="{Binding Main.NewDatapointName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
+                            <!--<TextBox.InputBindings>
                                 <KeyBinding Key="Return" Command="{Binding Main.NewDatapointReturnKeyCommand}" />
-                            </TextBox.InputBindings>
+                            </TextBox.InputBindings>-->
                         </TextBox>
-                        <Button Grid.Column="2" Command="{Binding Main.NewDatapointCommand}" Content="Subscribe" MinWidth="100" />
-                        <DataGrid Grid.Row="1" Grid.ColumnSpan="3"  ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
+                        <Button Grid.Column="2" Name="NewOrDeleteDatapointButton" MinWidth="100" Grid.Row="1">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <!-- Default Properties -->
+                                    <Setter Property="Content" Value="Subscribe"/>
+                                    <Setter Property="Command" Value="{Binding Main.NewDatapointCommand}" />
+                                    <!-- Triggered Properties -->
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=RadioButtonSubscribe, Path=IsChecked}" Value="True">
+                                            <Setter Property="Content" Value="Subscribe" />
+                                            <Setter Property="Command" Value="{Binding Main.NewDatapointCommand}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=RadioButtonUnsubscribe, Path=IsChecked}" Value="True">
+                                            <Setter Property="Content" Value="Unsubscribe" />
+                                            <Setter Property="CommandParameter" Value="{Binding ElementName=DatapointNameTextBox, Path=Text}" />
+                                            <Setter Property="Command" Value="{Binding Main.UnsubscribeCommand}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Label Content="Ausgewählt:" Grid.Row="2" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                                   Text="{Binding Main.SelectedDatasourceModel.ClientId, UpdateSourceTrigger=PropertyChanged}" Padding="0,5,0,0" />
+                        <DataGrid Grid.Row="3" Grid.ColumnSpan="3"  ItemsSource="{Binding Main.DatapointsView}" VerticalScrollBarVisibility="Auto"
                           AutoGenerateColumns="False" IsReadOnly="True" IsSynchronizedWithCurrentItem="True" EnableRowVirtualization="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Client-Zeit" Width="auto" Binding="{Binding Path=ClientTime}" />

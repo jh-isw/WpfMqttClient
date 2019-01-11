@@ -68,9 +68,6 @@ namespace WpfMqttClient.Model
                     return;
                 }
                 _identifier = value;
-#if DEBUG
-                Console.WriteLine("identifier :" + value);
-#endif
                 OnPropertyChanged();
             }
         }
