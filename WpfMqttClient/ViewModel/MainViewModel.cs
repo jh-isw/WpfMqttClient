@@ -221,6 +221,8 @@ namespace WpfMqttClient.ViewModel
         
         public ICollectionView DatasourcesView { get; }
 
+        private readonly object _onMessageReceivedLock = new object();
+
         #region Commands
         public RelayCommand ConnectCommand { get; private set; }
 
@@ -372,22 +374,25 @@ namespace WpfMqttClient.ViewModel
         private void Ds_OnMessageReceived(object sender, MessageReceivedEventArgs e)
         {
             //ApplicationMessages += "Ds_OnMessageReceived, " + e.Datapoint + ", " + e.Message + "\n";
-            bool found = false;
-            foreach(var item in Datapoints)
+            lock (_onMessageReceivedLock)
             {
-                if(item.ClientId == e.Datasource && item.Identifier == e.Datapoint)
+                bool found = false;
+                foreach (var item in Datapoints)
                 {
-                    item.Value = e.Message;
-                    found = true;
-                    break;
+                    if (item.ClientId == e.Datasource && item.Identifier == e.Datapoint)
+                    {
+                        item.Value = e.Message;
+                        found = true;
+                        break;
+                    }
                 }
-            }
 
-            if (!found)
-            {
-                var dp = new DatapointModel(e.Datasource, e.Datapoint, e.Message);
-                dp.PropertyChanged += Dp_PropertyChanged;
-                DispatcherHelper.RunAsync(() => Datapoints.Add(dp));
+                if (!found)
+                {
+                    var dp = new DatapointModel(e.Datasource, e.Datapoint, e.Message);
+                    dp.PropertyChanged += Dp_PropertyChanged;
+                    DispatcherHelper.RunAsync(() => Datapoints.Add(dp));
+                }
             }
         }
 
